@@ -3,36 +3,33 @@ const blacklist = require("../blacklist")
 
 require("dotenv").config();
 
-const middleware = (req,res,next) => {
 
-    try {
-        const token = req.headers.authorization?.split(" ")[1];
+const auth=(req,res,next)=>{
+    const token=req.headers.authorization?.split(" ")[1]
 
+    if(token){
         if(blacklist.includes(token)){
-            res.status(200).json({msg : "Please login!"} )
+            res.json({msg:"Login again the token is expired"})
         }
-        if(!token){
-            res.status(401).json({err : "Token not Provided"})
+        try{
+            jwt.verify(token,process.env.secretCode,(err,decoded)=>{
+                if(decoded){
+                    next()
+                }
+                else{
+                    res.status(200).json({msg:'Token is not valide'})
+                }
+            })
         }
-
-        const decoded = jwt.verify(token,process.env.secretCode)
-        console.log(decoded, "decoded");
-
-        req.userId = decoded.userID;
-        req.username = decoded.username;
-
-        console.log(req.userId,req.username , "check")
-
-        if(!decoded){
-            res.status(400).json({ err: "You are not authenticated"})
+        catch(err){
+            res.status(400).json({error:err.message})
         }
-        next();
-
-    } catch (error) {
-        console.log(error.message);
-        res.end(error.message)
     }
-
+    else{
+        res.json({msg:'Token needs to be require may be you have to login again'})
+    }
 }
 
-module.exports = middleware
+module.exports={
+    middleware
+}
