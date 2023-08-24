@@ -6,7 +6,6 @@ require("dotenv").config();
 
 const middleware=(req,res,next)=>{
     const token=req.headers.authorization?.split(" ")[1]
-
     if(token){
         if(blacklist.includes(token)){
             res.json({msg:"Login again the token is expired"})
