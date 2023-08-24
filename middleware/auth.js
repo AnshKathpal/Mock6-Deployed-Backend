@@ -13,6 +13,9 @@ const middleware=(req,res,next)=>{
         try{
             jwt.verify(token,process.env.secretCode,(err,decoded)=>{
                 if(decoded){
+                    
+                    req.userId = decoded.userID;
+        req.username = decoded.username;
                     next()
                 }
                 else{
