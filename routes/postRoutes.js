@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 const middleware = require("../middleware/auth")
 
-postRoute.post("/blogs", async (req, res) => {
+postRoute.post("/blogs", middleware ,async (req, res) => {
   try {
     const {title, content, category, date} = req.body;
 
@@ -32,7 +32,7 @@ postRoute.post("/blogs", async (req, res) => {
 });
 
 
-postRoute.get("/blogs",  async (req, res) => {
+postRoute.get("/blogs", middleware,  async (req, res) => {
   const { title, sort } = req.query;
 
   try {
