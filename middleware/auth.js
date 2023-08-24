@@ -9,10 +9,10 @@ const middleware = (req,res,next) => {
         const token = req.headers.authorization?.split(" ")[1];
 
         if(blacklist.includes(token)){
-            res.end("Please Login!")
+            res.status(200).json({msg : "Please login!"} )
         }
         if(!token){
-            res.status(401).end("Token not Provided")
+            res.status(401).json({err : "Token not Provided"})
         }
 
         const decoded = jwt.verify(token,process.env.secretCode)
@@ -24,7 +24,7 @@ const middleware = (req,res,next) => {
         console.log(req.userId,req.username , "check")
 
         if(!decoded){
-            res.end("You are not authenticated")
+            res.status(400).json({ err: "You are not authenticated"})
         }
         next();
 
